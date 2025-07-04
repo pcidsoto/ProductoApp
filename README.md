@@ -130,8 +130,9 @@ export default function App() {
 npx expo start --web
 ```
 
-Esto abrirá `http://localhost:19006` con la app corriendo en el navegador.
+Esto abrirá `http://localhost:8080` con la app corriendo en el navegador.
 
+El puerto 8080 puede ser otro
 ---
 
 ## 📲 Ejecutar la app en móvil

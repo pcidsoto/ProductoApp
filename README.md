@@ -1,26 +1,45 @@
-# 📱 ProductoApp - App en React Native con Login y Navegación
+# 📱 ProductoApp - App React Native con Login (Expo)
 
-ProductoApp es una aplicación construida con React Native (usando Expo), que permite iniciar sesión a través de una API externa y navegar a una lista de productos. Esta guía te mostrará cómo recrear el proyecto desde cero.
+ProductoApp es una app de ejemplo en React Native construida con Expo. Permite autenticarse mediante una API externa (`/api/auth/login`) y navegar a una pantalla de productos. Usa una estructura simple basada en `views`.
+
+---
+
+## 📁 Estructura del Proyecto
+
+```
+ProductoApp/
+├── views/
+│   ├── LoginView.js
+│   └── ProductoListView.js
+├── App.js
+├── package.json
+└── ...
+```
 
 ---
 
 ## 🚧 Requisitos Previos
 
-- Node.js instalado
-- Expo CLI (`npm install -g expo-cli`)
-- Editor de código (Visual Studio Code recomendado)
-- Cuenta en GitHub (opcional para versionado)
-- Backend API de login funcionando (como [APILogin](https://github.com/pcidsoto/APILogin))
+- Node.js
+- Expo CLI: `npm install -g expo-cli`
 
 ---
 
-## 🚀 Pasos para crear el proyecto
+## 🚀 Cómo recrear el proyecto paso a paso
 
 ### 1. Crear el proyecto con Expo
 
 ```bash
-npx create-expo-app ProductoApp
+expo init ProductoAPP
+choose a template >> blank
 cd ProductoApp
+```
+
+```información necesaria para ejecutar la app
+- npm start # you can open iOS, Android, or web from here, or run them directly with the commands below.
+- npm run android
+- npm run ios # requires an iOS device or macOS for access to an iOS simulator
+- npm run web
 ```
 
 ---
@@ -28,9 +47,10 @@ cd ProductoApp
 ### 2. Instalar dependencias necesarias
 
 ```bash
-npm install axios
-npm install @react-navigation/native @react-navigation/native-stack
+npx expo install react-dom react-native-web @expo/metro-runtime
+npx expo install axios
 npx expo install react-native-screens react-native-safe-area-context react-native-gesture-handler react-native-reanimated
+npm install @react-navigation/native @react-navigation/native-stack
 ```
 
 ---
@@ -38,14 +58,13 @@ npx expo install react-native-screens react-native-safe-area-context react-nativ
 ### 3. Crear estructura de carpetas
 
 ```bash
-mkdir screens
+mkdir views
 ```
 
 ---
 
-### 4. Crear las pantallas base
+### 4. Crear el archivo `views/LoginScreen.js`
 
-#### `screens/LoginScreen.js`
 ```js
 import React, { useState } from 'react';
 import { View, TextInput, Button, Text } from 'react-native';
@@ -58,12 +77,12 @@ export default function LoginScreen({ navigation }) {
 
   const login = async () => {
     try {
-      const res = await axios.post('http://TU_IP_LOCAL:3000/api/auth/login', {
+      const res = await axios.post('http://localhost:3000/api/auth/login', {
         email,
         password
       });
       setMensaje('Login exitoso');
-      navigation.navigate('Productos', { token: res.data.token });
+      // navigation.navigate('Productos', { token: res.data.token });
     } catch (err) {
       setMensaje('Error: ' + (err.response?.data?.message || err.message));
     }
@@ -80,30 +99,15 @@ export default function LoginScreen({ navigation }) {
 }
 ```
 
-#### `screens/ProductoListScreen.js`
-```js
-import React from 'react';
-import { View, Text } from 'react-native';
-
-export default function ProductoListScreen() {
-  return (
-    <View style={{ padding: 20 }}>
-      <Text>Lista de productos</Text>
-    </View>
-  );
-}
-```
-
 ---
 
-### 5. Configurar navegación en `App.js`
+### 6. Configurar navegación en `App.js`
 
 ```js
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import LoginScreen from './screens/LoginScreen';
-import ProductoListScreen from './screens/ProductoListScreen';
+import LoginScreen from './views/LoginScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -112,7 +116,6 @@ export default function App() {
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Login">
         <Stack.Screen name="Login" component={LoginScreen} />
-        <Stack.Screen name="Productos" component={ProductoListScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
@@ -121,37 +124,42 @@ export default function App() {
 
 ---
 
-### 6. Ejecutar la app
+## 🌐 Ejecutar la app en navegador (web)
+
+```bash
+npx expo start --web
+```
+
+Esto abrirá `http://localhost:19006` con la app corriendo en el navegador.
+
+---
+
+## 📲 Ejecutar la app en móvil
 
 ```bash
 npx expo start
 ```
 
-📱 Escanea el QR con la app Expo Go o presiona `w` para abrir en el navegador.
+Escanea el QR con la app **Expo Go** desde tu celular conectado a la misma red Wi-Fi que tu PC.
 
 ---
 
-## 🧪 Prueba de login
+## 🧪 Datos de prueba
 
-Usa estos datos con tu backend:
+Asegúrate de que tu API esté corriendo en el backend (`APILogin`) con:
 
-- **Email**: `test@ejemplo.com`
-- **Password**: `123456`
+- Email: `test@ejemplo.com`
+- Password: `123456`
 
----
-
-## 🔧 Consejos
-
-- Reemplaza `http://TU_IP_LOCAL:3000/...` por la IP real de tu PC (usa `ipconfig` o `ifconfig`).
-- Asegúrate que tu celular esté en la misma red que tu backend.
+Reemplaza `http://TU_IP_LOCAL:3000` por tu IP real visible con `ipconfig` o `ifconfig`.
 
 ---
 
-## 🛡️ Futuras mejoras
+## 🛡️ Ideas futuras
 
-- Guardar token en almacenamiento seguro (`AsyncStorage`)
-- Validar sesión y proteger rutas
-- Mostrar productos reales desde un endpoint protegido
+- Guardar token en `AsyncStorage`
+- Proteger rutas con sesión activa
+- Mostrar productos reales desde API
 
 ---
 
